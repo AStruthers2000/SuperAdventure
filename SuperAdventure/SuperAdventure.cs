@@ -1,4 +1,5 @@
 using Engine;
+using System.IO;
 
 namespace SuperAdventure
 {
@@ -7,13 +8,23 @@ namespace SuperAdventure
         private Player _player;
         private Monster _monster;
 
+        private string PLAYER_DATA_FILE_PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\SuperAdventure\\Save\\";
+        private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
+
         public SuperAdventure()
         {
             InitializeComponent();
 
-            _player = new Player(10, 10, 20, 0);
-            MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
-            _player.Inventory.Add(new InventoryItem(World.ItemByID(World.ITEM_ID_RUSTY_SWORD), 1));
+            if (File.Exists(PLAYER_DATA_FILE_PATH + PLAYER_DATA_FILE_NAME))
+            {
+                _player = Player.CreatePlayerFromXmlString(File.ReadAllText(PLAYER_DATA_FILE_PATH + PLAYER_DATA_FILE_NAME));
+            }
+            else
+            {
+                _player = Player.CreateDefaultPlayer();
+            }
+
+            MoveTo(_player.CurrentLocation);
 
             UpdatePlayerStats();
             UpdateInventoryListInUI();
@@ -150,7 +161,7 @@ namespace SuperAdventure
                 //Using overloaded Monster constructor for simplicity instead of book way
                 _monster = new Monster(standardMonster, standardMonster.CurrentHitPoints, standardMonster.MaximumHitPoints);
 
-                foreach(LootItem lootItem in standardMonster.LootTable)
+                foreach (LootItem lootItem in standardMonster.LootTable)
                 {
                     _monster.LootTable.Add(lootItem);
                 }
@@ -292,7 +303,7 @@ namespace SuperAdventure
             rtbMessages.Text += "You hit the " + _monster.Name + " for " + damageToMonster.ToString() + " points." + Environment.NewLine;
 
             //Check if the monster is dead
-            if(_monster.CurrentHitPoints <= 0)
+            if (_monster.CurrentHitPoints <= 0)
             {
                 //Monster is dead
                 rtbMessages.Text += Environment.NewLine;
@@ -310,18 +321,18 @@ namespace SuperAdventure
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
 
                 //Add items to the lootedItems list, comparing a random number to the drop percent
-                foreach(LootItem lootItem in _monster.LootTable)
+                foreach (LootItem lootItem in _monster.LootTable)
                 {
-                    if(RandomNumberGenerator.NumberBetween(1,100) <= lootItem.DropPercentage)
+                    if (RandomNumberGenerator.NumberBetween(1, 100) <= lootItem.DropPercentage)
                     {
                         lootedItems.Add(new InventoryItem(lootItem.Details, 1));
                     }
                 }
 
                 //If no items were randomly selected, then add the default loot items(s)
-                if(lootedItems.Count == 0)
+                if (lootedItems.Count == 0)
                 {
-                    foreach(LootItem lootItem in _monster.LootTable)
+                    foreach (LootItem lootItem in _monster.LootTable)
                     {
                         if (lootItem.IsDefaultItem)
                         {
@@ -331,11 +342,11 @@ namespace SuperAdventure
                 }
 
                 //Add the looted items to the player's inventory
-                foreach(InventoryItem inventoryItem in lootedItems)
+                foreach (InventoryItem inventoryItem in lootedItems)
                 {
                     _player.AddItemToInventory(inventoryItem.Details);
 
-                    if(inventoryItem.Quantity == 1)
+                    if (inventoryItem.Quantity == 1)
                     {
                         rtbMessages.Text += "You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.Name + Environment.NewLine;
                     }
@@ -371,7 +382,7 @@ namespace SuperAdventure
 
                 UpdatePlayerStats();
 
-                if(_player.CurrentHitPoints <= 0)
+                if (_player.CurrentHitPoints <= 0)
                 {
                     //Display message
                     rtbMessages.Text += "The " + _monster.Name + " killed you." + Environment.NewLine;
@@ -396,9 +407,9 @@ namespace SuperAdventure
             _player.CurrentHitPoints = Math.Clamp(_player.CurrentHitPoints, 0, _player.MaximumHitPoints);
 
             //Remove the potion from the player's inventory
-            foreach(InventoryItem ii in _player.Inventory)
+            foreach (InventoryItem ii in _player.Inventory)
             {
-                if(ii.Details.ID == potion.ID)
+                if (ii.Details.ID == potion.ID)
                 {
                     ii.Quantity--;
                     break;
@@ -450,6 +461,19 @@ namespace SuperAdventure
         {
             rtbMessages.SelectionStart = rtbMessages.Text.Length;
             rtbMessages.ScrollToCaret();
+        }
+
+        private void SuperAdventure_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                File.WriteAllText(PLAYER_DATA_FILE_PATH + PLAYER_DATA_FILE_NAME, _player.ToXMLString());
+            }
+            catch
+            {
+                Directory.CreateDirectory(PLAYER_DATA_FILE_PATH);
+                File.WriteAllText(PLAYER_DATA_FILE_PATH + PLAYER_DATA_FILE_NAME, _player.ToXMLString());
+            }
         }
     }
 }
