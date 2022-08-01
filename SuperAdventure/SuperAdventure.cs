@@ -11,16 +11,15 @@ namespace SuperAdventure
         {
             InitializeComponent();
 
-            _player = new Player(10, 10, 20, 0, 1);
+            _player = new Player(10, 10, 20, 0);
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             _player.Inventory.Add(new InventoryItem(World.ItemByID(World.ITEM_ID_RUSTY_SWORD), 1));
-            
-            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
-            lblGold.Text = _player.Gold.ToString();
-            lblExperience.Text = _player.ExperiencePoints.ToString();
-            lblLevel.Text = _player.Level.ToString();
 
-
+            UpdatePlayerStats();
+            UpdateInventoryListInUI();
+            UpdateQuestListInUI();
+            UpdateWeaponListInUI();
+            UpdatePotionListInUI();
         }
 
         private void btnNorth_Click(object sender, EventArgs e)
@@ -69,9 +68,6 @@ namespace SuperAdventure
             //Full heal the player
             _player.CurrentHitPoints = _player.MaximumHitPoints;
 
-            //Update HP UI
-            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
-
             //Does the location have a quest?
             if (newLocation.QuestAvailableHere != null)
             {
@@ -103,6 +99,8 @@ namespace SuperAdventure
                             rtbMessages.Text += newLocation.QuestAvailableHere.RewardItem.Name + Environment.NewLine;
                             rtbMessages.Text += Environment.NewLine;
 
+                            ScrollToBottomOfMessages();
+
                             _player.ExperiencePoints += newLocation.QuestAvailableHere.RewardExperiencePoints;
                             _player.Gold += newLocation.QuestAvailableHere.RewardGold;
 
@@ -133,6 +131,8 @@ namespace SuperAdventure
                         }
                     }
                     rtbMessages.Text += Environment.NewLine;
+
+                    ScrollToBottomOfMessages();
 
                     //Add the quest to the player's quest list
                     _player.Quests.Add(new PlayerQuest(newLocation.QuestAvailableHere));
@@ -172,6 +172,7 @@ namespace SuperAdventure
             }
 
 
+            UpdatePlayerStats();
             UpdateInventoryListInUI();
             UpdateQuestListInUI();
             UpdateWeaponListInUI();
@@ -344,12 +345,7 @@ namespace SuperAdventure
                     }
                 }
 
-                //Refresh player information and inventory controls
-                lblHitPoints.Text = _player.CurrentHitPoints.ToString();
-                lblGold.Text = _player.Gold.ToString();
-                lblExperience.Text = _player.ExperiencePoints.ToString();
-                lblLevel.Text = _player.Level.ToString();
-
+                UpdatePlayerStats();
                 UpdateInventoryListInUI();
                 UpdateWeaponListInUI();
                 UpdatePotionListInUI();
@@ -373,8 +369,7 @@ namespace SuperAdventure
                 //Subtact damage from player
                 _player.CurrentHitPoints -= damageToPlayer;
 
-                //Refresh player data in UI
-                lblHitPoints.Text = _player.CurrentHitPoints.ToString();
+                UpdatePlayerStats();
 
                 if(_player.CurrentHitPoints <= 0)
                 {
@@ -385,6 +380,8 @@ namespace SuperAdventure
                     MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
                 }
             }
+
+            ScrollToBottomOfMessages();
         }
 
         private void btnUsePotion_Click(object sender, EventArgs e)
@@ -396,7 +393,7 @@ namespace SuperAdventure
             _player.CurrentHitPoints += potion.AmountToHeal;
 
             //CurrentHitPoints cannot exceed player's MaximumHitPoints
-            Math.Clamp(_player.CurrentHitPoints, 0, _player.MaximumHitPoints);
+            _player.CurrentHitPoints = Math.Clamp(_player.CurrentHitPoints, 0, _player.MaximumHitPoints);
 
             //Remove the potion from the player's inventory
             foreach(InventoryItem ii in _player.Inventory)
@@ -431,10 +428,28 @@ namespace SuperAdventure
                 MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             }
 
-            //Refresh player data in UI
-            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
+            UpdatePlayerStats();
             UpdateInventoryListInUI();
             UpdatePotionListInUI();
+
+            ScrollToBottomOfMessages();
+        }
+
+
+        private void UpdatePlayerStats()
+        {
+            //Refresh player information and inventory controls
+            lblHitPoints.Text = _player.CurrentHitPoints.ToString();
+            lblGold.Text = _player.Gold.ToString();
+            lblExperience.Text = _player.ExperiencePoints.ToString();
+            lblLevel.Text = _player.Level.ToString();
+        }
+
+
+        private void ScrollToBottomOfMessages()
+        {
+            rtbMessages.SelectionStart = rtbMessages.Text.Length;
+            rtbMessages.ScrollToCaret();
         }
     }
 }
