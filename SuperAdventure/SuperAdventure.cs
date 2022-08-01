@@ -38,7 +38,6 @@ namespace SuperAdventure
             MoveTo(_player.CurrentLocation.LocationToNorth);
         }
 
-
         private void btnSouth_Click(object sender, EventArgs e)
         {
             MoveTo(_player.CurrentLocation.LocationToSouth);
@@ -112,7 +111,7 @@ namespace SuperAdventure
 
                             ScrollToBottomOfMessages();
 
-                            _player.ExperiencePoints += newLocation.QuestAvailableHere.RewardExperiencePoints;
+                            _player.AddExperiencePoints(newLocation.QuestAvailableHere.RewardExperiencePoints);
                             _player.Gold += newLocation.QuestAvailableHere.RewardGold;
 
                             _player.AddItemToInventory(newLocation.QuestAvailableHere.RewardItem);
@@ -251,10 +250,19 @@ namespace SuperAdventure
             }
             else
             {
+                cboWeapons.SelectedIndexChanged -= cboWeapons_SelectedIndexChanged;
                 cboWeapons.DataSource = weapons;
+                cboWeapons.SelectedIndexChanged += cboWeapons_SelectedIndexChanged;
                 cboWeapons.DisplayMember = "Name";
                 cboWeapons.ValueMember = "ID";
-                cboWeapons.SelectedIndex = 0;
+                if (_player.CurrentWeapon != null)
+                {
+                    cboWeapons.SelectedItem = _player.CurrentWeapon;
+                }
+                else
+                {
+                    cboWeapons.SelectedIndex = 0;
+                }
             }
         }
 
@@ -310,7 +318,7 @@ namespace SuperAdventure
                 rtbMessages.Text += "You defeated the " + _monster.Name + Environment.NewLine;
 
                 //Give the player experience points for killing the monster
-                _player.ExperiencePoints += _monster.RewardExperiencePoints;
+                _player.AddExperiencePoints(_monster.RewardExperiencePoints);
                 rtbMessages.Text += "You receive " + _monster.RewardExperiencePoints.ToString() + " experience points" + Environment.NewLine;
 
                 //Give the player gold for killing the monster
@@ -446,7 +454,6 @@ namespace SuperAdventure
             ScrollToBottomOfMessages();
         }
 
-
         private void UpdatePlayerStats()
         {
             //Refresh player information and inventory controls
@@ -455,7 +462,6 @@ namespace SuperAdventure
             lblExperience.Text = _player.ExperiencePoints.ToString();
             lblLevel.Text = _player.Level.ToString();
         }
-
 
         private void ScrollToBottomOfMessages()
         {
@@ -474,6 +480,11 @@ namespace SuperAdventure
                 Directory.CreateDirectory(PLAYER_DATA_FILE_PATH);
                 File.WriteAllText(PLAYER_DATA_FILE_PATH + PLAYER_DATA_FILE_NAME, _player.ToXMLString());
             }
+        }
+
+        private void cboWeapons_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _player.CurrentWeapon = (Weapon)cboWeapons.SelectedItem;
         }
     }
 }

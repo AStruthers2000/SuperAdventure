@@ -10,12 +10,14 @@ namespace Engine
     public class Player : LivingCreature
     {
         public int Gold { get; set; }
-        public int ExperiencePoints { get; set; }
+        public int ExperiencePoints { get; private set; }
         public int Level
         {
             get { return ((ExperiencePoints / 100) + 1); }
         }
         public Location CurrentLocation { get; set; }
+
+        public Weapon CurrentWeapon { get; set; }
 
 
         public List<InventoryItem> Inventory { get; set; }
@@ -60,6 +62,12 @@ namespace Engine
                 int currentLocationID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentLocation").InnerText);
                 player.CurrentLocation = World.LocationByID(currentLocationID);
 
+                if (playerData.SelectSingleNode("/Player/Stats/CurrentWeapon") != null)
+                {
+                    int currentWeaponID = Convert.ToInt32(playerData.SelectSingleNode("/Player/Stats/CurrentWeapon").InnerText);
+                    player.CurrentWeapon = (Weapon)World.ItemByID(currentWeaponID);
+                }
+
                 foreach(XmlNode node in playerData.SelectNodes("/Player/InventoryItems/InventoryItem"))
                 {
                     int id = Convert.ToInt32(node.Attributes["ID"].Value);
@@ -91,6 +99,13 @@ namespace Engine
             }
         }
 
+        
+        public void AddExperiencePoints(int experiencePointsToAdd)
+        {
+            ExperiencePoints += experiencePointsToAdd;
+            MaximumHitPoints = (Level * 10);
+        }
+
         public bool HasRequiredItemToEnterLocation(Location location)
         {
             if (location.ItemRequiredToEnter == null)
@@ -103,12 +118,10 @@ namespace Engine
             return Inventory.Exists(ii => ii.Details.ID == location.ItemRequiredToEnter.ID);
         }
 
-
         public bool HasThisQuest(Quest quest)
         {
             return Quests.Exists(pq => pq.Details.ID == quest.ID);
         }
-
 
         public bool CompletedThisQuest(Quest quest)
         {
@@ -122,13 +135,11 @@ namespace Engine
             return false;
         }
 
-
         public bool HasAllQuestCompletionItems(Quest quest)
         {
             //∀ qci ∈ quest.QuestCompletionItems, ∃ ii ∈ Inventory | ii.ID = qci.ID id.Quantity ≥ qci.Quantity
             return quest.QuestCompletionItems.All(qci => Inventory.Exists(ii => ii.Details.ID == qci.Details.ID && ii.Quantity >= qci.Quantity));
         }
-
 
         public void RemoveQuestCompletionItems(Quest quest)
         {
@@ -144,7 +155,6 @@ namespace Engine
             }
         }
 
-
         public void AddItemToInventory(Item itemToAdd)
         {
             InventoryItem item = Inventory.SingleOrDefault(ii => ii.Details.ID == itemToAdd.ID);
@@ -159,7 +169,6 @@ namespace Engine
                 item.Quantity++;
             }
         }
-
 
         public void MarkQuestCompleted(Quest quest)
         {
@@ -204,6 +213,13 @@ namespace Engine
             XmlNode currentLocation = playerData.CreateElement("CurrentLocation");
             currentLocation.AppendChild(playerData.CreateTextNode(this.CurrentLocation.ID.ToString()));
             stats.AppendChild(currentLocation);
+
+            if (CurrentWeapon != null)
+            {
+                XmlNode currentWeapon = playerData.CreateElement("CurrentWeapon");
+                currentWeapon.AppendChild(playerData.CreateTextNode(this.CurrentWeapon.ID.ToString()));
+                stats.AppendChild(currentWeapon);
+            }
 
             //Create the "InventoryItems" child node to hold each InventoryItem node
             XmlNode inventoryItems = playerData.CreateElement("InventoryItems");
