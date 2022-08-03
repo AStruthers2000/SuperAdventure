@@ -23,6 +23,7 @@ namespace Engine
         public const int ITEM_ID_SPIDER_FANG = 8;
         public const int ITEM_ID_SPIDER_SILK = 9;
         public const int ITEM_ID_ADVENTURER_PASS = 10;
+        public const int ITEM_ID_PARRY_DAGGER = 11;
 
         public const int MONSTER_ID_RAT = 1;
         public const int MONSTER_ID_SNAKE = 2;
@@ -61,6 +62,7 @@ namespace Engine
             Items.Add(new Item(ITEM_ID_SPIDER_FANG, "Spider fang", "Spider fangs"));
             Items.Add(new Item(ITEM_ID_SPIDER_SILK, "Spider silk", "Spider silks"));
             Items.Add(new Item(ITEM_ID_ADVENTURER_PASS, "Adventurer pass", "Adventurer passes"));
+            Items.Add(new Weapon(ITEM_ID_PARRY_DAGGER, "Parrying Dagger", "Parrying Daggers", 4, 40));
         }
 
 
@@ -69,14 +71,17 @@ namespace Engine
             Monster rat = new Monster(MONSTER_ID_RAT, "Rat", 5, 3, 10, 3, 3);
             rat.LootTable.Add(new LootItem(ItemByID(ITEM_ID_RAT_TAIL), 75, false));
             rat.LootTable.Add(new LootItem(ItemByID(ITEM_ID_PIECE_OF_FUR), 75, true));
+            rat.LootTable.Add(new LootItem(ItemByID(ITEM_ID_HEALING_POTION), 10, false));
 
             Monster snake = new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3);
             snake.LootTable.Add(new LootItem(ItemByID(ITEM_ID_SNAKE_FANG), 75, false));
             snake.LootTable.Add(new LootItem(ItemByID(ITEM_ID_SNAKESKIN), 75, true));
+            snake.LootTable.Add(new LootItem(ItemByID(ITEM_ID_CLUB), 5, false));
 
             Monster giantSpider = new Monster(MONSTER_ID_GIANT_SPIDER, "Giant spider", 20, 5, 40, 10, 10);
             giantSpider.LootTable.Add(new LootItem(ItemByID(ITEM_ID_SPIDER_FANG), 75, true));
             giantSpider.LootTable.Add(new LootItem(ItemByID(ITEM_ID_SPIDER_SILK), 25, false));
+            giantSpider.LootTable.Add(new LootItem(ItemByID(ITEM_ID_PARRY_DAGGER), 1, false));
 
             Monsters.Add(rat);
             Monsters.Add(snake);
@@ -155,7 +160,6 @@ namespace Engine
 
 
             // Add locations to list
-
             Locations.Add(home);
             Locations.Add(townSquare);
             Locations.Add(guardPost);

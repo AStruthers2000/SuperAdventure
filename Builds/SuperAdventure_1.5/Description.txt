@@ -1,0 +1,21 @@
+This is the first build of SuperAdventure. 
+The game works with minimal features. 
+
+Changes from 1.4:
+No gameplay changes from 1.4
+Completely seperated UI and Engine logic and cleaned up code base.
+
+Features:
+9 Locations
+2 Quests
+1 Weapon
+1 Potion
+3 Enemies
+
+Maximum HP increases - MaximumHP = Level * 10
+Gold can't be used
+Experience impacts level - Level = (Experience / 100) + 1
+Level impacts health cap
+
+
+

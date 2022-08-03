@@ -152,7 +152,6 @@ namespace Engine
                 OnMessage(this, new MessageEventArgs(message, addExtraNewLine));
             }
         }
-
         
         public void AddExperiencePoints(int experiencePointsToAdd)
         {
@@ -355,18 +354,6 @@ namespace Engine
 
         private void RaiseInventoryChangedEvent(Item item)
         {
-            /*
-            if(item is Weapon)
-            {
-                OnPropertyChanged("Weapons");
-            }
-
-            if(item is HealingPotion)
-            {
-                OnPropertyChanged("Potions");
-            }
-            */
-
             switch (item)
             {
                 case Weapon:
@@ -387,25 +374,11 @@ namespace Engine
             if (!HasRequiredItemToEnterLocation(newLocation))
             {
                 RaiseMessage("You must have a " + newLocation.ItemRequiredToEnter.Name + " to enter this location.");
-                //rtbLocation.Text += "You must have a " + newLocation.ItemRequiredToEnter.Name + " to enter this location." + Environment.NewLine;
                 return;
             }
 
             //Update the player's current location
             CurrentLocation = newLocation;
-
-            /*
-            //Show/hide available movement buttons
-            btnNorth.Visible = (newLocation.LocationToNorth != null);
-            btnSouth.Visible = (newLocation.LocationToSouth != null);
-            btnEast.Visible = (newLocation.LocationToEast != null);
-            btnWest.Visible = (newLocation.LocationToWest != null);
-            
-
-            //Display name and description of new location
-            rtbLocation.Text = newLocation.Name + Environment.NewLine;
-            rtbLocation.Text += newLocation.Description + Environment.NewLine;
-            */
 
             //Full heal the player
             CurrentHitPoints = MaximumHitPoints;
@@ -428,27 +401,17 @@ namespace Engine
                         //The player has all items required to complete the quest
                         if (playerHasAllItemsToCompleteQuest)
                         {
-                            
-
                             RemoveQuestCompletionItems(newLocation.QuestAvailableHere);
 
                             //Display message
                             RaiseMessage("");
                             RaiseMessage("You completed the " + newLocation.QuestAvailableHere.Name + " quest.");
-                            //rtbMessages.Text += Environment.NewLine;
-                            //rtbMessages.Text += "You completed the " + newLocation.QuestAvailableHere.Name + " quest." + Environment.NewLine;
 
                             //Give quest rewards
                             RaiseMessage("You receive: ");
                             RaiseMessage(newLocation.QuestAvailableHere.RewardExperiencePoints.ToString() + " experience points");
                             RaiseMessage(newLocation.QuestAvailableHere.RewardGold.ToString() + " gold");
                             RaiseMessage(newLocation.QuestAvailableHere.RewardItem.Name);
-
-                            //rtbMessages.Text += "You receive: " + Environment.NewLine;
-                            //rtbMessages.Text += newLocation.QuestAvailableHere.RewardExperiencePoints.ToString() + " experience points" + Environment.NewLine;
-                            //rtbMessages.Text += newLocation.QuestAvailableHere.RewardGold.ToString() + " gold" + Environment.NewLine;
-                            //rtbMessages.Text += newLocation.QuestAvailableHere.RewardItem.Name + Environment.NewLine;
-                            //rtbMessages.Text += Environment.NewLine;
 
                             AddExperiencePoints(newLocation.QuestAvailableHere.RewardExperiencePoints);
                             Gold += newLocation.QuestAvailableHere.RewardGold;
@@ -469,24 +432,18 @@ namespace Engine
                     RaiseMessage(newLocation.QuestAvailableHere.Description);
                     RaiseMessage("To complete it, return with:");
 
-                    //rtbMessages.Text += "You receive the " + newLocation.QuestAvailableHere.Name + " quest." + Environment.NewLine;
-                    //rtbMessages.Text += newLocation.QuestAvailableHere.Description + Environment.NewLine;
-                    //rtbMessages.Text += "To complete it, return with:" + Environment.NewLine;
                     foreach (QuestCompletionItem qci in newLocation.QuestAvailableHere.QuestCompletionItems)
                     {
                         if (qci.Quantity == 1)
                         {
                             RaiseMessage(qci.Quantity.ToString() + " " + qci.Details.Name);
-                            //rtbMessages.Text += qci.Quantity.ToString() + " " + qci.Details.Name + Environment.NewLine;
                         }
                         else
                         {
                             RaiseMessage(qci.Quantity.ToString() + " " + qci.Details.NamePlural);
-                            //rtbMessages.Text += qci.Quantity.ToString() + " " + qci.Details.NamePlural + Environment.NewLine;
                         }
                     }
                     RaiseMessage("");
-                    //rtbMessages.Text += Environment.NewLine;
 
                     //Add the quest to the player's quest list
                     Quests.Add(new PlayerQuest(newLocation.QuestAvailableHere));
@@ -497,7 +454,6 @@ namespace Engine
             if (newLocation.MonsterLivingHere != null)
             {
                 RaiseMessage("You see a " + newLocation.MonsterLivingHere.Name);
-                //rtbMessages.Text += "You see a " + newLocation.MonsterLivingHere.Name + Environment.NewLine;
 
                 //Make a new monster, using the values of the standard monster in the World.Monster list
                 Monster standardMonster = World.MonsterByID(newLocation.MonsterLivingHere.ID);
@@ -560,7 +516,6 @@ namespace Engine
 
             //Display message
             RaiseMessage("You hit the " + _currentMonster.Name + " for " + damageToMonster.ToString() + " points.");
-            //rtbMessages.Text += "You hit the " + _monster.Name + " for " + damageToMonster.ToString() + " points." + Environment.NewLine;
 
             //Check if the monster is dead
             if (_currentMonster.CurrentHitPoints <= 0)
@@ -568,18 +523,14 @@ namespace Engine
                 //Monster is dead
                 RaiseMessage("");
                 RaiseMessage("You defeted the " + _currentMonster.Name);
-                //rtbMessages.Text += Environment.NewLine;
-                //rtbMessages.Text += "You defeated the " + _monster.Name + Environment.NewLine;
 
                 //Give the player experience points for killing the monster
                 AddExperiencePoints(_currentMonster.RewardExperiencePoints);
                 RaiseMessage("You receive " + _currentMonster.RewardExperiencePoints.ToString() + " experience points");
-                //rtbMessages.Text += "You receive " + _monster.RewardExperiencePoints.ToString() + " experience points" + Environment.NewLine;
 
                 //Give the player gold for killing the monster
                 Gold += _currentMonster.RewardGold;
                 RaiseMessage("You receive " + _currentMonster.RewardGold.ToString() + " gold");
-                //rtbMessages.Text += "You receive " + _monster.RewardGold.ToString() + " gold" + Environment.NewLine;
 
                 //Get random loot items from the monster
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
@@ -613,18 +564,15 @@ namespace Engine
                     if (inventoryItem.Quantity == 1)
                     {
                         RaiseMessage("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.Name);
-                        //rtbMessages.Text += "You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.Name + Environment.NewLine;
                     }
                     else
                     {
                         RaiseMessage("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.NamePlural);
-                        //rtbMessages.Text += "You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.NamePlural + Environment.NewLine;
                     }
                 }
 
                 //Add a blank line to the messages box for appearance.
                 RaiseMessage("");
-                //rtbMessages.Text += Environment.NewLine;
 
                 //Move player to current location (to heal player and create a new monster to fight)
                 MoveTo(CurrentLocation);
@@ -638,7 +586,6 @@ namespace Engine
 
                 //Display message
                 RaiseMessage("The " + _currentMonster.Name + " did " + damageToPlayer.ToString() + " points of damage.");
-                //rtbMessages.Text += "The " + _monster.Name + " did " + damageToPlayer.ToString() + " points of damage." + Environment.NewLine;
 
                 //Subtact damage from player
                 CurrentHitPoints -= damageToPlayer;
@@ -647,7 +594,6 @@ namespace Engine
                 {
                     //Display message
                     RaiseMessage("The " + _currentMonster.Name + " killed you.");
-                    //rtbMessages.Text += "The " + _monster.Name + " killed you." + Environment.NewLine;
 
                     //Move player to "Home"
                     MoveHome();
@@ -669,7 +615,6 @@ namespace Engine
 
             //Display message
             RaiseMessage("You drink a " + potion.Name);
-            //rtbMessages.Text += "You drink a " + potion.Name + Environment.NewLine;
 
             //Monster gets their turn to attack
 
@@ -678,7 +623,6 @@ namespace Engine
 
             //Display message
             RaiseMessage("The " + _currentMonster.Name + " did " + damageToPlayer.ToString() + " points of damage.");
-            //rtbMessages.Text += "The " + _monster.Name + " did " + damageToPlayer.ToString() + " points of damage." + Environment.NewLine;
 
             //Subtact damage from player
             CurrentHitPoints -= damageToPlayer;
@@ -687,7 +631,6 @@ namespace Engine
             {
                 //Display message
                 RaiseMessage("The " + _currentMonster.Name + " killed you.");
-                //rtbMessages.Text += "The " + _monster.Name + " killed you." + Environment.NewLine;
 
                 //Move player to "Home"
                 MoveHome();

@@ -11,6 +11,7 @@ namespace Engine
     {
         private Quest _details;
         private bool _isCompleted;
+        private string _isCompletedString;
 
         public Quest Details
         {
@@ -28,8 +29,18 @@ namespace Engine
             set
             {
                 _isCompleted = value;
-                OnPropertyChanged("IsCompleted");
+                IsCompletedString = "";
                 OnPropertyChanged("Name");
+            }
+        }
+
+        public string IsCompletedString
+        {
+            get { return _isCompletedString; }
+            set
+            {
+                _isCompletedString = IsCompleted ? "Yes" : "No";
+                OnPropertyChanged("IsCompletedString");
             }
         }
 

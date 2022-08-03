@@ -1,0 +1,23 @@
+This is the first build of SuperAdventure. 
+The game works with minimal features. 
+
+Changes from 1.1:
+There are no gameplay changes made from 1.1. 
+The game now saves automatically on exiting - Save data is stored in %appdata%\\SuperAdventure\\Save\\PlayerData.xml
+The game now loads automatically on start IF a valid save file exists in the proper location
+The game loads a default character if no save is found.
+
+Features:
+9 Locations
+2 Quests
+1 Weapon
+1 Potion
+3 Enemies
+
+Maximum HP never increases
+Gold can't be used
+Experience impacts level - Level = (Experience / 100) + 1
+Level doesn't mean anything
+
+
+

@@ -1,0 +1,17 @@
+This is the first build of SuperAdventure. 
+The game works with minimal features
+
+Features:
+9 Locations
+2 Quests
+1 Weapon
+1 Potion
+3 Enemies
+
+Maximum HP never increases
+Gold can't be used
+Experience doesn't impact level
+Level doesn't mean anything
+
+
+

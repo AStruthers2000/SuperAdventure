@@ -7,7 +7,6 @@ namespace SuperAdventure
     public partial class SuperAdventure : Form
     {
         private Player _player;
-        private Monster _monster;
 
         private string PLAYER_DATA_FILE_PATH = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\SuperAdventure\\Save\\";
         private const string PLAYER_DATA_FILE_NAME = "PlayerData.xml";
@@ -26,6 +25,10 @@ namespace SuperAdventure
             }
 
             //Binding player stat labels
+            //These are bound by tying the label text value to the value of each variable in the player class
+            //The player inherits from living creature, which inherits from INotifyPropertyChanged, so each time the 
+            //value of any one of these variables is changed, the label is notified from the inherited INotifyPropertyChanged class
+            //and the label knows what to do from there
             lblHitPoints.DataBindings.Add("Text", _player, "CurrentHitPoints");
             lblGold.DataBindings.Add("Text", _player, "Gold");
             lblExperience.DataBindings.Add("Text", _player, "ExperiencePoints");
@@ -64,7 +67,7 @@ namespace SuperAdventure
             dgvQuests.Columns.Add(new DataGridViewTextBoxColumn
             {
                 HeaderText = "Done?",
-                DataPropertyName = "IsCompleted",
+                DataPropertyName = "IsCompletedString",
             });
 
             //Binding player weapons combo box
@@ -85,8 +88,9 @@ namespace SuperAdventure
             cboPotions.DisplayMember = "Name";
             cboPotions.ValueMember = "ID";
 
+            //Linking player properties with the UI by adding the function SuperAdventure.PlayerOnPropertyChanged to the function stored
+            //in the LivingCreature.PropertyChanged varianble
             _player.PropertyChanged += PlayerOnPropertyChanged;
-
 
             //Binding player display message event
             _player.OnMessage += DisplayMessage;

@@ -1,0 +1,22 @@
+This is the first build of SuperAdventure. 
+The game works with minimal features. 
+
+Changes from 1.0:
+There are no gameplay changes made from 1.0. 
+The source code was cleaned up to include LINQ instead of FOREACH in a lot of places. 
+Text now scrolls to the bottom automatically so players don't need to do it themselves.
+
+Features:
+9 Locations
+2 Quests
+1 Weapon
+1 Potion
+3 Enemies
+
+Maximum HP never increases
+Gold can't be used
+Experience impacts level - Level = (Experience / 100) + 1
+Level doesn't mean anything
+
+
+
