@@ -1,17 +1,15 @@
 This is the first build of SuperAdventure. 
 The game works with minimal features. 
 
-Changes from 1.3:
-No gameplay changes from 1.3.
-Changed UI updating and started decoupling UI vs Engine logic.
-Binded player properties to UI controls
-Binded Inventory and Quest properties to UI DataGridViews
-Binded weapon and potion selection to ComboBoxes
+Changes from 1.6:
+Added a legitimate way to Club into the game besides for modifying the save file.
+Added a legitimate way to get more than one Healing Potion besides for modifying the save file.
+Added a new weapon.
 
 Features:
 9 Locations
 2 Quests
-1 Weapon
+3 Weapon
 1 Potion
 3 Enemies
 
