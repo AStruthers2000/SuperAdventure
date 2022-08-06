@@ -390,6 +390,7 @@ namespace Engine
                 else
                 {
                     RaiseMessage("You have the required " + newLocation.ItemRequiredToEnter.Name + " so this area can now be accessed whenever you want.");
+                    //RemoveItemFromInventory(newLocation.ItemRequiredToEnter);
                     newLocation.ItemRequiredToEnter = null;
                 }
             }
@@ -406,6 +407,17 @@ namespace Engine
 
             //Full heal the player
             CurrentHitPoints = MaximumHitPoints;
+
+            //Are there any pickup items here?
+            if (newLocation.ItemsPickUpHere.Any())
+            {
+                RaiseMessage("You found:");
+                foreach(KeyValuePair<Item, int> pickUp in newLocation.ItemsPickUpHere)
+                {
+                    RaiseMessage(pickUp.Value + " " + (pickUp.Value > 1 ? pickUp.Key.NamePlural : pickUp.Key.Name));
+                    AddItemToInventory(pickUp.Key, pickUp.Value);
+                }
+            }
 
             //Does any quest start here?
             if (newLocation.QuestStartHere.Any())
@@ -424,6 +436,8 @@ namespace Engine
                         //Display the messages
                         RaiseMessage("You receive the " + questStart.Name + " quest.");
                         RaiseMessage(questStart.Description);
+
+                        //Does the player get any items to start the quest?
                         if (questStart.StartItems.Any())
                         {
                             RaiseMessage("You will be given the following items to complete the quest:");
@@ -434,17 +448,21 @@ namespace Engine
                             }
                         }
 
-                        RaiseMessage("To complete it, return with:");
-
-                        foreach (QuestCompletionItem qci in questStart.QuestCompletionItems)
+                        //Does this quest require any items to complete?
+                        if (questStart.QuestCompletionItems.Any())
                         {
-                            if (qci.Quantity == 1)
+                            RaiseMessage("To complete it, return with:");
+
+                            foreach (QuestCompletionItem qci in questStart.QuestCompletionItems)
                             {
-                                RaiseMessage(qci.Quantity.ToString() + " " + qci.Details.Name);
-                            }
-                            else
-                            {
-                                RaiseMessage(qci.Quantity.ToString() + " " + qci.Details.NamePlural);
+                                if (qci.Quantity == 1)
+                                {
+                                    RaiseMessage(qci.Quantity.ToString() + " " + qci.Details.Name);
+                                }
+                                else
+                                {
+                                    RaiseMessage(qci.Quantity.ToString() + " " + qci.Details.NamePlural);
+                                }
                             }
                         }
                         RaiseMessage("");

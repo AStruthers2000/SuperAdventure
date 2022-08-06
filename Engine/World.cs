@@ -175,7 +175,7 @@ namespace Engine
             Items.Add(new Item(ITEM_ID_DARK_ELF_BRAID, "Braid of Dark Elf Hair", "Braids of Dark Elf Hair", 6));
             Items.Add(new Item(ITEM_ID_DARK_ELF_DAGGER, "Dark Elf Dagger", "Dark Elf Daggers", 12));
             Items.Add(new Item(ITEM_ID_DARK_ELF_GEM, "Gem of a Dark Elf", "Dark Elf Gems", 10));
-            Items.Add(new Item(ITEM_ID_DARK_ELF_BRANCH, "Bewiching Branch", "Bewiching Branches", 15));
+            Items.Add(new Item(ITEM_ID_DARK_ELF_BRANCH, "Bewitching Branch", "Bewitching Branches", 15));
             Items.Add(new Item(ITEM_ID_DARK_ELF_BOW, "Dark Elf Bow", "Dark Elf Bows", 20));
             Items.Add(new Item(ITEM_ID_DARK_ELF_ARROW, "Dark Elf Arrow", "Dark Elf Arrows", 2));
             Items.Add(new Item(ITEM_ID_ROBBER_SATCHEL, "Bandit's Satchel", "Bandit's Satchels", 25));
@@ -196,7 +196,7 @@ namespace Engine
             
             //Progression Items
             Items.Add(new Item(ITEM_ID_ADVENTURER_PASS, "Adventurer Pass", "Adventurer passes", UNSELLABLE_ITEM_PRICE));
-            Items.Add(new Item(ITEM_ID_DARK_ELF_BRANCH, "Sacred Wooden Wreath", "Sacred Wooden Wreaths", UNSELLABLE_ITEM_PRICE));
+            Items.Add(new Item(ITEM_ID_ELF_BRANCH, "Sacred Wooden Wreath", "Sacred Wooden Wreaths", UNSELLABLE_ITEM_PRICE));
             Items.Add(new Item(ITEM_ID_KING_NOTE, "King's Note", "King's Notes", UNSELLABLE_ITEM_PRICE));
             Items.Add(new Item(ITEM_ID_WITCH_APPROVAL, "Seal of the Witch's Approval", "Seals of the Witch's Approval", UNSELLABLE_ITEM_PRICE));
             Items.Add(new Item(ITEM_ID_LOST_CHILD_COMPANION, "Guard's Child", "Guard's Children", UNSELLABLE_ITEM_PRICE));
@@ -307,6 +307,7 @@ namespace Engine
             helpWitch.QuestCompletionItems.Add(new QuestCompletionItem(ItemByID(ITEM_ID_SPIDER_EGG), 2));
             helpWitch.QuestCompletionItems.Add(new QuestCompletionItem(ItemByID(ITEM_ID_RAT_TAIL), 10));
             helpWitch.RewardItems.Add(ItemByID(ITEM_ID_RETURN_HOME_POTION), 4);
+            helpWitch.RewardItems.Add(ItemByID(ITEM_ID_WITCH_APPROVAL), 1);
 
             Quest findChild = new Quest(QUEST_ID_FIND_LOST_CHILD, "Lost Girl", "The guard of the watch tower needs us to help find his daughter who wandered off into the dark forest alone. He will be eternally grateful.", 45, 375);
             findChild.QuestCompletionItems.Add(new QuestCompletionItem(ItemByID(ITEM_ID_LOST_CHILD_COMPANION), 1));
@@ -314,7 +315,7 @@ namespace Engine
             findChild.RewardItems.Add(ItemByID(ITEM_ID_LONG_SWORD), 1);
 
             Quest smuggleElf = new Quest(QUEST_ID_SMUGGLE_ELF, "Bring the Elf Back Home", "You encounter a scared elf alone in the dark forest. He requests your help getting him back to his village. The dark elves in these woods are very aggressive towards anyone that isn't one of their own. He gives you a wreath crafted out of elven wood that will serve as a key to get past the elven guards.", 68, 32);
-            smuggleElf.StartItems.Add(ItemByID(ITEM_ID_DARK_ELF_BRANCH), 1);
+            smuggleElf.StartItems.Add(ItemByID(ITEM_ID_ELF_BRANCH), 1);
             smuggleElf.RewardItems.Add(ItemByID(ITEM_ID_ELVEN_CURVED_SWORD), 1);
             smuggleElf.RewardItems.Add(ItemByID(ITEM_ID_MAJOR_HEALING_POTION), 5);
             smuggleElf.RewardItems.Add(ItemByID(ITEM_ID_RETURN_HOME_POTION), 7);
@@ -456,6 +457,8 @@ namespace Engine
             darkForest13.MonsterLivingHere = MonsterByID(MONSTER_ID_DARK_ELF);
             darkForest14.MonsterLivingHere = MonsterByID(MONSTER_ID_DARK_ELF);
 
+            darkForest10.ItemsPickUpHere.Add(ItemByID(ITEM_ID_LOST_CHILD_COMPANION), 1);
+
 
             //Linking the locations together
             home.LocationToNorth = townSouth;
@@ -526,13 +529,19 @@ namespace Engine
             cave.LocationToNorth = wizardTower;
             cave.LocationToEast = secretRoad;
 
+            wizardTower.LocationToSouth = cave;
+
             portTown.LocationToNorth = darkForest12;
             portTown.LocationToEast = docks;
             portTown.LocationToSouth = portMarket;
             portTown.LocationToWest = tradingRoadSouth;
 
+            portMarket.LocationToNorth = portTown;
+
             docks.LocationToSouth = beach;
             docks.LocationToWest = portTown;
+
+            beach.LocationToNorth = docks;
 
             darkForest01.LocationToNorth = spiderField;
             darkForest01.LocationToEast = darkForest02;

@@ -15,6 +15,7 @@ namespace Engine
         public int LevelRequiredToEnter { get; set; }
         public List<Quest> QuestStartHere { get; set; }
         public List<Quest> QuestFinishHere { get; set; }
+        public Dictionary<Item, int> ItemsPickUpHere { get; set; }
         public Monster MonsterLivingHere { get; set; }
         public Location LocationToNorth { get; set; }
         public Location LocationToEast { get; set; }
@@ -33,6 +34,7 @@ namespace Engine
 
             QuestStartHere = new List<Quest>();
             QuestFinishHere = new List<Quest>();
+            ItemsPickUpHere = new Dictionary<Item, int>();
         }
     }
 }
