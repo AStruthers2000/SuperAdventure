@@ -13,7 +13,32 @@ namespace Engine
         public string Description { get; set; }
         public int RewardExperiencePoints { get; set; }
         public int RewardGold { get; set; }
-        public Item RewardItem { get; set; }
+
+        public Dictionary<Item, int> StartItems { get; set; }
+        public Dictionary<Item, int> RewardItems { get; set; }
+
+        private Location _startLocation;
+        private Location _endLocation;
+
+        public Location StartLocation
+        {
+            get { return _startLocation; }
+            set
+            {
+                _startLocation = value;
+                value.QuestStartHere.Add(this);
+            }
+        }
+
+        public Location EndLocation
+        {
+            get { return _endLocation; }
+            set
+            {
+                _endLocation = value;
+                value.QuestFinishHere.Add(this);
+            }
+        }
 
         public List<QuestCompletionItem> QuestCompletionItems { get; set; }
 
@@ -25,6 +50,8 @@ namespace Engine
             RewardExperiencePoints = rewardExperiencePoints;
             RewardGold = rewardGold;
 
+            StartItems = new Dictionary<Item, int>();
+            RewardItems = new Dictionary<Item, int>();
             QuestCompletionItems = new List<QuestCompletionItem>();
         }
     }

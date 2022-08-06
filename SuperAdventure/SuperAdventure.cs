@@ -129,7 +129,7 @@ namespace SuperAdventure
             _player.MoveWest();
         }
 
-        
+
         private void btnUseWeapon_Click(object sender, EventArgs e)
         {
             //Get the currently selected weapon from the cboWeapons Combobox
@@ -140,7 +140,7 @@ namespace SuperAdventure
         private void btnUsePotion_Click(object sender, EventArgs e)
         {
             //Get the currently selected potion from the combobox
-            HealingPotion potion = (HealingPotion)cboPotions.SelectedItem;
+            Potion potion = (Potion)cboPotions.SelectedItem;
             _player.UsePotion(potion);
         }
 
@@ -167,7 +167,13 @@ namespace SuperAdventure
             switch (propertyChangedEventArgs.PropertyName)
             {
                 case "Weapons":
+                    Weapon previousWeapon = _player.CurrentWeapon;
                     cboWeapons.DataSource = _player.Weapons;
+
+                    if (previousWeapon != null && _player.Weapons.Exists(w => w.ID == previousWeapon.ID))
+                    {
+                        cboWeapons.SelectedItem = previousWeapon;
+                    }
 
                     if (!_player.Weapons.Any())
                     {
@@ -190,7 +196,7 @@ namespace SuperAdventure
                     btnEast.Visible = (_player.CurrentLocation.LocationToEast != null);
                     btnSouth.Visible = (_player.CurrentLocation.LocationToSouth != null);
                     btnWest.Visible = (_player.CurrentLocation.LocationToWest != null);
-                    
+
                     // Display current location name and description
                     rtbLocation.Text = _player.CurrentLocation.Name + Environment.NewLine;
                     rtbLocation.Text += _player.CurrentLocation.Description + Environment.NewLine;

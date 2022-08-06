@@ -1,0 +1,11 @@
+need to complete the clear the farmers field quest and then kill an additional 36 snakes to get to level 3... a bit excessive
+	make snakes give more XP or make alchemist area locked behind lower level
+
+needed to kill 42 rats to get the potion recipe for quest 4, in the process leveling up 4 times. 
+	leveling up this many times is fine. this balance feels good, but the deep forest 1 entrance and the trading road start entrance need to be locked behind higher levels
+	maybe make the recipe drop chance higher and have the rats drop more experience (or increase the XP reward for the alchemist garden quest) so there is less of a grind
+
+since the player doesn't get a new weapon, lizardfolk are too strong even at level 7 
+	a possible fix is to add a weapon in the shop that can be bought for at most $500
+	another possible fix is to make the lizardfolk weaker (but needing to buy a new weapon seems like a good intro to the shop)
+
